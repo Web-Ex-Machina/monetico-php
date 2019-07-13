@@ -5,6 +5,16 @@ namespace DansMaCulotte\Monetico\Exceptions;
 class PaymentException extends \Exception
 {
     /**
+     * @param string $order_context
+     *
+     * @return PaymentException
+     */
+    public static function invalidOrderContext()
+    {
+        return new self("order_context value is required, should be an array");
+    }
+
+    /**
      * @param string $reference
      *
      * @return PaymentException

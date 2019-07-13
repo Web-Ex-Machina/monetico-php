@@ -7,6 +7,9 @@ use DansMaCulotte\Monetico\Exceptions\PaymentException;
 class Payment
 {
     /** @var string */
+    public $order_context;
+
+    /** @var string */
     public $reference;
 
     /** @var string */
@@ -34,7 +37,7 @@ class Payment
     public $commitments;
 
     /** @var string */
-    const FORMAT_OUTPUT = '%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s';
+    const FORMAT_OUTPUT = '%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s*%s';
 
     /** @var array */
     const PAYMENT_WAYS = array(
@@ -56,6 +59,11 @@ class Payment
      */
     public function __construct($data = array(), $commitments = array(), $options = array())
     {
+        $this->order_context = $data['order_context'];
+        if (!is_array($this->order_context) || empty($this->order_context)) {
+            throw PaymentException::invalidOrderContext();
+        }
+
         $this->reference = $data['reference'];
         if (strlen($this->reference) > 12) {
             throw PaymentException::invalidReference($this->reference);
@@ -156,6 +164,7 @@ class Payment
         $output = sprintf(
             self::FORMAT_OUTPUT,
             $eptCode,
+            base64_encode(utf8_encode($this->order_context)),
             $this->datetime->format('d/m/Y:H:i:s'),
             $this->amount . $this->currency,
             $this->reference,
@@ -229,6 +238,7 @@ class Payment
             array(
                 'version' => $version,
                 'TPE' => $eptCode,
+                'contexte_commande' => base64_encode(utf8_encode($this->order_context)),
                 'date' => $this->datetime->format('d/m/Y:H:i:s'),
                 'montant' => $this->amount . $this->currency,
                 'reference' => $this->reference,
