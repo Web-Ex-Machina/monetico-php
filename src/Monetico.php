@@ -8,7 +8,7 @@ use DansMaCulotte\Monetico\Payment\Response;
 
 class Monetico
 {
-    const SERVICE_VERSION = '3.0';
+    const SERVICE_VERSION = '4.0';
 
     const MAIN_SERVICE_URL = 'https://p.monetico-services.com';
     const MISC_SERVICE_URL = 'https://payment-api.e-i.com';
@@ -47,6 +47,8 @@ class Monetico
             throw Exception::invalidSecurityKey();
         }
 
+        $this->_checkEptParams($aRequiredConstants);
+
         $this->_eptCode = $eptCode;
         $this->_securityKey = self::getUsableKey($securityKey);
         $this->_companyCode = $companyCode;
@@ -60,8 +62,25 @@ class Monetico
      *
      * @param boolean $value
      */
-    public function setDebug($value = true) {
+    public function setDebug($value = true)
+    {
         $this->_debug = $value;
+    }
+
+    /**
+     * Check if every TPE constants exists
+     *
+     * @param [Array] $aConstants [description]
+     *
+     * @return [type]             [description]
+     */
+    private function _checkEptParams($aConstants)
+    {
+        for ($i = 0; $i < count($aConstants); $i++) {
+            if (!defined($aConstants[$i])) {
+                throw Exception::invalidConstant($aConstants[$i]);
+            }
+        }
     }
 
     /**
@@ -71,8 +90,8 @@ class Monetico
      *
      * @return string
      */
-    public static function getUsableKey($key) {
-
+    public static function getUsableKey($key)
+    {
         $hexStrKey = substr($key, 0, 38);
         $hexFinal = '' . substr($key, 38, 2) . '00';
 
@@ -154,5 +173,4 @@ class Monetico
 
         return $seal;
     }
-
 }

@@ -22,4 +22,13 @@ class Exception extends \Exception
         return new self("Security key is invalid, should be 40 characters long.");
     }
 
+    /**
+     * @param string $strConstant
+     * 
+     * @return Exception
+     */
+    public static function invalidConstant($strConstant)
+    {
+        return new self("Constant ${strConstant} is undefined");
+    }
 }
