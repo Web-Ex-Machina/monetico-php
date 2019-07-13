@@ -164,7 +164,7 @@ class Payment
         $output = sprintf(
             self::FORMAT_OUTPUT,
             $eptCode,
-            base64_encode(utf8_encode($this->order_context)),
+            base64_encode(utf8_encode(json_encode($this->order_context))),
             $this->datetime->format('d/m/Y:H:i:s'),
             $this->amount . $this->currency,
             $this->reference,
@@ -238,7 +238,7 @@ class Payment
             array(
                 'version' => $version,
                 'TPE' => $eptCode,
-                'contexte_commande' => base64_encode(utf8_encode($this->order_context)),
+                'contexte_commande' => base64_encode(utf8_encode(json_encode($this->order_context))),
                 'date' => $this->datetime->format('d/m/Y:H:i:s'),
                 'montant' => $this->amount . $this->currency,
                 'reference' => $this->reference,
