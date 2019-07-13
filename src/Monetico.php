@@ -23,6 +23,7 @@ class Monetico
     private $_returnUrl = null;
     private $_successUrl = null;
     private $_errorUrl = null;
+    private $_lang = null;
     private $_debug = false;
 
     /**
@@ -37,7 +38,7 @@ class Monetico
      *
      * @throws Exception
      */
-    public function __construct($eptCode, $securityKey, $companyCode, $returnUrl, $successUrl, $errorUrl)
+    public function __construct($eptCode, $securityKey, $companyCode, $returnUrl, $successUrl, $errorUrl, $lang = "FR")
     {
         if (strlen($eptCode) != 7) {
             throw Exception::invalidEptCode($eptCode);
@@ -55,6 +56,7 @@ class Monetico
         $this->_returnUrl = $returnUrl;
         $this->_successUrl = $successUrl;
         $this->_errorUrl = $errorUrl;
+        $this->_lang = $lang;
     }
 
     /**
